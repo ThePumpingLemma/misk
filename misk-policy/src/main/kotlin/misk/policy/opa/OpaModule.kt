@@ -8,7 +8,6 @@ import misk.client.HttpClientEndpointConfig
 import misk.client.HttpClientFactory
 import misk.inject.KAbstractModule
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -31,7 +30,6 @@ class OpaModule : KAbstractModule() {
     )
     val retrofit = retrofit2.Retrofit.Builder()
       .baseUrl(config.baseUrl)
-      .addConverterFactory(ScalarsConverterFactory.create())
       .addConverterFactory(MoshiConverterFactory.create(moshi))
       .client(okHttpClient)
       .build()

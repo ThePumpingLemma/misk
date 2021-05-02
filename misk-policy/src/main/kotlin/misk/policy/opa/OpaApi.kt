@@ -14,6 +14,6 @@ interface OpaApi {
   @POST("/v1/data/{documentPath}")
   fun queryDocument(
     @Path("documentPath") documentPath: String,
-    @Body input: String
+    @Body input: String? = null
   ): Call<ResponseBody>
 }

@@ -101,6 +101,7 @@ object Dependencies {
   val protobufGradlePlugin = "com.google.protobuf:protobuf-gradle-plugin:0.8.10"
   val protoc = "com.google.protobuf:protoc:3.6.1"
   val retrofit = "com.squareup.retrofit2:retrofit:2.8.1"
+  val retrofitMock = "com.squareup.retrofit2:retrofit-mock:2.8.1"
   val retrofitMoshi = "com.squareup.retrofit2:converter-moshi:2.8.1"
   val retrofitProtobuf = "com.squareup.retrofit2:converter-protobuf:2.8.1"
   val retrofitWire = "com.squareup.retrofit2:converter-wire:2.8.1"
