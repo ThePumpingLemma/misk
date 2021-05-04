@@ -15,6 +15,7 @@ import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.isNull
 import retrofit2.Response
@@ -42,7 +43,7 @@ internal class OpaPolicyEngineTest {
 
   @Test
   fun emptyInputQuery() {
-    Mockito.whenever(opaApi.queryDocument(anyString(), isNull())).thenReturn(
+    Mockito.whenever(opaApi.queryDocument(anyString())).thenReturn(
       Calls.response(
         ResponseBody.create(
           APPLICATION_JSON.asMediaType(),
@@ -54,10 +55,11 @@ internal class OpaPolicyEngineTest {
     assertThat(evaluate).isEqualTo(BasicResponse("a"))
   }
 
+
   @Test
   fun pojoInputQuery() {
     val requestCaptor = Mockito.captor<String>()
-    Mockito.whenever(opaApi.queryDocument(anyString(), requestCaptor.capture())).thenReturn(
+    Mockito.whenever(opaApi.queryDocument(anyString(), capture(requestCaptor))).thenReturn(
       Calls.response(
         ResponseBody.create(
           APPLICATION_JSON.asMediaType(),
@@ -107,6 +109,9 @@ internal class OpaPolicyEngineTest {
     assertThat(exception.cause!!.message).isEqualTo("Required value 'test' missing at \$.result")
     assertThat(exception.message).isEqualTo("Response shape did not match")
   }
+
+  // Weird kotlin workaround for mockito. T must not be nullable.
+  private fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()
 
   data class BasicResponse(val test: String)
   data class BasicRequest(val someValue: Int)

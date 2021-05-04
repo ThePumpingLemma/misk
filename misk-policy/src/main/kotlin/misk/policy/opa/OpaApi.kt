@@ -14,6 +14,12 @@ interface OpaApi {
   @POST("/v1/data/{documentPath}")
   fun queryDocument(
     @Path("documentPath") documentPath: String,
-    @Body input: String? = null
+  ): Call<ResponseBody>
+
+  @Headers("Content-Type: application/json")
+  @POST("/v1/data/{documentPath}")
+  fun queryDocument(
+    @Path("documentPath") documentPath: String,
+    @Body input: String
   ): Call<ResponseBody>
 }
