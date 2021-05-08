@@ -3,11 +3,9 @@ package misk.policy.opa
 import com.google.inject.Provides
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import misk.client.HttpClientConfig
-import misk.client.HttpClientEndpointConfig
 import misk.client.HttpClientFactory
 import misk.inject.KAbstractModule
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -16,22 +14,14 @@ class OpaModule : KAbstractModule() {
   }
 
   @Provides
-  fun opaApi(
+  internal fun opaApi(
     config: OpaConfig,
     httpClientFactory: HttpClientFactory,
     @Named("opa-moshi") moshi: Moshi
   ): OpaApi {
-    val okHttpClient = httpClientFactory.create(
-      HttpClientEndpointConfig(
-        clientConfig = HttpClientConfig(
-          unixSocketFile = config.unixSocket
-        )
-      )
-    )
     val retrofit = retrofit2.Retrofit.Builder()
+      .addConverterFactory(ScalarsConverterFactory.create())
       .baseUrl(config.baseUrl)
-      .addConverterFactory(MoshiConverterFactory.create(moshi))
-      .client(okHttpClient)
       .build()
     return retrofit.create(OpaApi::class.java)
   }

@@ -2,7 +2,7 @@ dependencies {
   implementation(Dependencies.guice)
   implementation(Dependencies.loggingApi)
   implementation(Dependencies.retrofit)
-  implementation(Dependencies.retrofitMoshi)
+  implementation(Dependencies.retrofitScalars)
   implementation(Dependencies.moshiKotlin)
   implementation(project(":misk"))
   implementation(project(":misk-core"))

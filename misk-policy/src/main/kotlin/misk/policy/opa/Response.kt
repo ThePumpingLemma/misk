@@ -5,6 +5,6 @@ package misk.policy.opa
  * Every response has this standard shape, made concrete by the expected response type.
  */
 data class Response<T>(
-  val decision_id: String,
+  val decision_id: String?,
   val result: T
 )
