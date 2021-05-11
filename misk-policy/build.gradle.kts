@@ -13,7 +13,6 @@ dependencies {
 
   testImplementation(Dependencies.assertj)
   testImplementation(Dependencies.logbackClassic)
-  testImplementation(project(":wisp-logging"))
   testImplementation(project(":misk-testing"))
   testImplementation(Dependencies.mockitoCore)
   testImplementation(Dependencies.retrofitMock)

@@ -20,7 +20,7 @@ class OpaPolicyEngine @Inject constructor(
    * Evaluate / Query a document with given input of shape T.
    * This will connect to OPA via a retrofit interface and perform a /v1/data/{document} POST.
    *
-   * @throws RuntimeException if the request to OPA failed or the response shape didn't match R.
+   * @throws PolicyEngineException if the request to OPA failed or the response shape didn't match R.
    * @return Response shape R from OPA.
    */
   fun <T, R> evaluateInternal(
@@ -45,7 +45,7 @@ class OpaPolicyEngine @Inject constructor(
    * Evaluate / Query a document with no additional input.
    * This will connect to OPA via a retrofit interface and perform a /v1/data/{document} POST.
    *
-   * @throws RuntimeException if the request to OPA failed or the response shape didn't match R.
+   * @throws PolicyEngineException if the request to OPA failed or the response shape didn't match R.
    * @return Response shape R from OPA.
    */
   fun <R> evaluateInternal(document: String, returnType: Class<R>): R {
@@ -62,7 +62,7 @@ class OpaPolicyEngine @Inject constructor(
       else -> opaApi.queryDocument(document, inputString).execute()
     }
     if (!response.isSuccessful) {
-      throw RuntimeException("[${response.code()}]: ${response.errorBody()?.string()}")
+      throw PolicyEngineException("[${response.code()}]: ${response.errorBody()?.string()}")
     }
     return response
   }
@@ -80,12 +80,12 @@ class OpaPolicyEngine @Inject constructor(
     )
 
     val responseBody =
-      response.body()?.string() ?: throw RuntimeException("OPA response body is empty")
+      response.body()?.string() ?: throw PolicyEngineException("OPA response body is empty")
     val extractedResponse = try {
       outputAdapter.fromJson(responseBody)
-        ?: throw RuntimeException("Unmarshalled OPA response body is empty")
+        ?: throw PolicyEngineException("Unmarshalled OPA response body is empty")
     } catch (e: Exception) {
-      throw RuntimeException("Response shape did not match", e)
+      throw PolicyEngineException("Response shape did not match", e)
     }
 
     return extractedResponse.result
