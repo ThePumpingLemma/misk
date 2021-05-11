@@ -23,7 +23,7 @@ class OpaPolicyEngine @Inject constructor(
    * @throws PolicyEngineException if the request to OPA failed or the response shape didn't match R.
    * @return Response shape R from OPA.
    */
-  fun <T, R> evaluateInternal(
+  private fun <T, R> evaluateInternal(
     document: String,
     input: T,
     inputType: Class<T>,
@@ -37,8 +37,17 @@ class OpaPolicyEngine @Inject constructor(
     return parseResponse(returnType, response)
   }
 
+  fun <T, R> evaluate(
+    document: String,
+    input: T,
+    inputType: Class<T>,
+    returnType: Class<R>
+  ): R {
+    return evaluateInternal(document, input, inputType, returnType)
+  }
+
   inline fun <reified T, reified R> evaluate(document: String, input: T): R {
-    return evaluateInternal(document, input, T::class.java, R::class.java)
+    return evaluate(document, input, T::class.java, R::class.java)
   }
 
   /**
@@ -48,9 +57,17 @@ class OpaPolicyEngine @Inject constructor(
    * @throws PolicyEngineException if the request to OPA failed or the response shape didn't match R.
    * @return Response shape R from OPA.
    */
-  fun <R> evaluateInternal(document: String, returnType: Class<R>): R {
+  private fun <R> evaluateInternal(document: String, returnType: Class<R>): R {
     val response = queryOpa(document)
     return parseResponse(returnType, response)
+  }
+
+  fun <R> evaluate(document: String, returnType: Class<R>): R {
+    return evaluateInternal(document, returnType)
+  }
+
+  inline fun <reified R> evaluate(document: String): R {
+    return evaluate(document, R::class.java)
   }
 
   private fun queryOpa(
@@ -65,10 +82,6 @@ class OpaPolicyEngine @Inject constructor(
       throw PolicyEngineException("[${response.code()}]: ${response.errorBody()?.string()}")
     }
     return response
-  }
-
-  inline fun <reified R> evaluate(document: String): R {
-    return evaluateInternal(document, R::class.java)
   }
 
   private fun <R> parseResponse(
