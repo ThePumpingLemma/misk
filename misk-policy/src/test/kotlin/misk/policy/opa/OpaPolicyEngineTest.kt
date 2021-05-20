@@ -85,7 +85,7 @@ internal class OpaPolicyEngineTest {
       )
     )
 
-    val exception = assertThrows<RuntimeException> {
+    val exception = assertThrows<PolicyEngineException> {
       opaPolicyEngine.evaluate("test", BasicRequest(1))
     }
     assertThat(exception.message).isEqualTo("[403]: Access Denied")
@@ -102,7 +102,7 @@ internal class OpaPolicyEngineTest {
       )
     )
 
-    val exception = assertThrows<RuntimeException> {
+    val exception = assertThrows<PolicyEngineException> {
       opaPolicyEngine.evaluate<BasicRequest, BasicResponse>("test", BasicRequest(1))
     }
     assertThat(exception.cause).isInstanceOf(JsonDataException::class.java)
